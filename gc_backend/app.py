@@ -68,5 +68,16 @@ def get_book(book_id):
     book = Book.query.get_or_404(book_id)
     return jsonify(book.to_dict())
 
+@app.route('/books/<int:book_id>', methods=['DELETE'])
+def delete_book(book_id):
+    book = Book.query.get(book_id)
+    
+    if not book:
+        return jsonify({'error': 'Book not found'}), 404
+    
+    db.session.delete(book)
+    db.session.commit()
+    return jsonify({'message': 'Book deleted successfully'}), 200
+
 if __name__ == '__main__':
     app.run(debug=True)
